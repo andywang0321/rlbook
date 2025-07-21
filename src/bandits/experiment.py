@@ -20,10 +20,8 @@ class Run:
         return action, reward
 
 
-def simulate_one_run(
-    k: int, run_len: int, stationary: bool, gambler_templates: list[Gambler]
-):
-    bandit = Bandit(k, stationary)
+def simulate_one_run(k: int, run_len: int, stationary: bool, gambler_templates: list[Gambler], value: float = 0.0):
+    bandit = Bandit(k, stationary, value)
     gamblers = [copy.deepcopy(g) for g in gambler_templates]
     runs = [Run(bandit, g) for g in gamblers]
     num_agents = len(runs)
@@ -46,13 +44,14 @@ def simulate_parallel(
     num_runs: int,
     stationary: bool,
     gambler_templates: list[Gambler],
+    value: float = 0.0,
     n_jobs: int = -1,
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Run bandit simulations in parallel using deepcopy to clone agents.
     """
     results = Parallel(n_jobs=n_jobs)(
-        delayed(simulate_one_run)(k, run_len, stationary, gambler_templates)
+        delayed(simulate_one_run)(k, run_len, stationary, gambler_templates, value)
         for _ in trange(num_runs, desc="Stationary" if stationary else "Nonstationary")
     )
 
@@ -109,11 +108,11 @@ def run_experiment(
     run_len: int,
     num_runs: int,
     gambler_templates: list[Gambler],
-    labels: list[str],
     show_stationary: bool = True,
     show_nonstationary: bool = True,
     show_rewards: bool = True,
     show_optimal: bool = True,
+    value: float = 0.0,
     n_jobs: int = -1,
 ):
     """
@@ -125,6 +124,8 @@ def run_experiment(
     rows = int(show_rewards) + int(show_optimal)
     fig, axes = plt.subplots(rows, cols, figsize=(6 * cols, 4 * rows), squeeze=False)
 
+    labels: list[str] = [g.label for g in gambler_templates]
+
     col = 0
     if show_stationary:
         rewards, optimal = simulate_parallel(
@@ -133,6 +134,7 @@ def run_experiment(
             num_runs,
             stationary=True,
             gambler_templates=gambler_templates,
+            value=value,
             n_jobs=n_jobs,
         )
         plot_results(
@@ -153,6 +155,7 @@ def run_experiment(
             num_runs,
             stationary=False,
             gambler_templates=gambler_templates,
+            value=value,
             n_jobs=n_jobs,
         )
         plot_results(

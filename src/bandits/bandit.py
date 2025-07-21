@@ -3,11 +3,11 @@ from .utils import argmax
 
 
 class Bandit:
-    def __init__(self, k: int, stationary: bool = False) -> None:
+    def __init__(self, k: int, stationary: bool = False, value: float = 0) -> None:
         self.k: int = k
         self.stationary: bool = stationary
         if stationary:
-            self.values: list[float] = [np.random.normal(0, 1) for _ in range(k)]
+            self.values: list[float] = [np.random.normal(value, 1) for _ in range(k)]
         else:
             q_star = np.random.normal(0, 1)
             self.values = [q_star for _ in range(k)]
