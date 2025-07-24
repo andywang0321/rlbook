@@ -69,10 +69,10 @@ const_step_templates: list[Gambler] = [Gambler(k=k, epsilon=e, alpha=0.1) for e 
 # eps_greedy_optimal: NDArray[np.float64] = eps_greedy_optimal_all[:, :, -avg_over:].mean(axis=(1, 2))
 
 # load eps_greedy data
-eps_greedy_rewards_all = pd.read_csv("data/ex_0211/eps_greedy_rewards.csv").values
-eps_greedy_optimal_all = pd.read_csv("data/ex_0211/eps_greedy_optimal.csv").values
-eps_greedy_rewards: NDArray[np.float64] = eps_greedy_rewards_all[-avg_over:].mean(axis=1)
-eps_greedy_optimal: NDArray[np.float64] = eps_greedy_optimal_all[-avg_over:].mean(axis=1)
+eps_greedy_rewards_all = pd.read_csv("data/ex_0211/eps_greedy_rewards.csv").drop("step", axis=1).values
+eps_greedy_optimal_all = pd.read_csv("data/ex_0211/eps_greedy_optimal.csv").drop("step", axis=1).values
+eps_greedy_rewards: NDArray[np.float64] = eps_greedy_rewards_all[-avg_over:].mean(axis=0)
+eps_greedy_optimal: NDArray[np.float64] = eps_greedy_optimal_all[-avg_over:].mean(axis=0)
 
 # print("Simulating gradient bandit...")
 # gradient_rewards_all, gradient_optimal_all = simulate_parallel(
@@ -83,10 +83,10 @@ eps_greedy_optimal: NDArray[np.float64] = eps_greedy_optimal_all[-avg_over:].mea
 # gradient_optimal: NDArray[np.float64] = gradient_optimal_all[:, :, -avg_over:].mean(axis=(1, 2))
 
 # load gradient data
-gradient_rewards_all = pd.read_csv("data/ex_0211/gradient_bandit_rewards.csv").values
-gradient_optimal_all = pd.read_csv("data/ex_0211/gradient_bandit_optimal.csv").values
-gradient_rewards: NDArray[np.float64] = gradient_rewards_all[-avg_over:].mean(axis=1)
-gradient_optimal: NDArray[np.float64] = gradient_optimal_all[-avg_over:].mean(axis=1)
+gradient_rewards_all = pd.read_csv("data/ex_0211/gradient_bandit_rewards.csv").drop("step", axis=1).values
+gradient_optimal_all = pd.read_csv("data/ex_0211/gradient_bandit_optimal.csv").drop("step", axis=1).values
+gradient_rewards: NDArray[np.float64] = gradient_rewards_all[-avg_over:].mean(axis=0)
+gradient_optimal: NDArray[np.float64] = gradient_optimal_all[-avg_over:].mean(axis=0)
 
 # print("Simulating UCB...")
 # ucb_rewards_all, ucb_optimal_all = simulate_parallel(
@@ -97,10 +97,10 @@ gradient_optimal: NDArray[np.float64] = gradient_optimal_all[-avg_over:].mean(ax
 # ucb_optimal: NDArray[np.float64] = ucb_optimal_all[:, :, -avg_over:].mean(axis=(1, 2))
 
 # load ucb data
-ucb_rewards_all = pd.read_csv("data/ex_0211/ucb_rewards.csv").values
-ucb_optimal_all = pd.read_csv("data/ex_0211/ucb_optimal.csv").values
-ucb_rewards: NDArray[np.float64] = ucb_rewards_all[-avg_over:].mean(axis=1)
-ucb_optimal: NDArray[np.float64] = ucb_optimal_all[-avg_over:].mean(axis=1)
+ucb_rewards_all = pd.read_csv("data/ex_0211/ucb_rewards.csv").drop("step", axis=1).values
+ucb_optimal_all = pd.read_csv("data/ex_0211/ucb_optimal.csv").drop("step", axis=1).values
+ucb_rewards: NDArray[np.float64] = ucb_rewards_all[-avg_over:].mean(axis=0)
+ucb_optimal: NDArray[np.float64] = ucb_optimal_all[-avg_over:].mean(axis=0)
 
 # print("Simulating optimistic initial values...")
 # optimist_rewards_all, optimist_optimal_all = simulate_parallel(
@@ -111,18 +111,24 @@ ucb_optimal: NDArray[np.float64] = ucb_optimal_all[-avg_over:].mean(axis=1)
 # optimist_optimal: NDArray[np.float64] = optimist_optimal_all[:, :, -avg_over:].mean(axis=(1, 2))
 
 # load optimist data
-optimist_rewards_all = pd.read_csv("data/ex_0211/optimist_rewards.csv").values
-optimist_optimal_all = pd.read_csv("data/ex_0211/optimist_optimal.csv").values
-optimist_rewards: NDArray[np.float64] = optimist_rewards_all[-avg_over:].mean(axis=1)
-optimist_optimal: NDArray[np.float64] = optimist_optimal_all[-avg_over:].mean(axis=1)
+optimist_rewards_all = pd.read_csv("data/ex_0211/optimist_rewards.csv").drop("step", axis=1).values
+optimist_optimal_all = pd.read_csv("data/ex_0211/optimist_optimal.csv").drop("step", axis=1).values
+optimist_rewards: NDArray[np.float64] = optimist_rewards_all[-avg_over:].mean(axis=0)
+optimist_optimal: NDArray[np.float64] = optimist_optimal_all[-avg_over:].mean(axis=0)
 
-print("Simulating constant step size...")
-const_step_rewards_all, const_step_optimal_all = simulate_parallel(
-    k=k, run_len=run_len, num_runs=num_runs, stationary=stationary, gambler_templates=const_step_templates
-)
-save_data("constant_step_size", epsilons, const_step_rewards_all, const_step_optimal_all)
-const_step_rewards: NDArray[np.float64] = const_step_rewards_all[:, :, -avg_over:].mean(axis=(1, 2))
-const_step_optimal: NDArray[np.float64] = const_step_optimal_all[:, :, -avg_over:].mean(axis=(1, 2))
+# print("Simulating constant step size...")
+# const_step_rewards_all, const_step_optimal_all = simulate_parallel(
+#     k=k, run_len=run_len, num_runs=num_runs, stationary=stationary, gambler_templates=const_step_templates
+# )
+# save_data("constant_step_size", epsilons, const_step_rewards_all, const_step_optimal_all)
+# const_step_rewards: NDArray[np.float64] = const_step_rewards_all[:, :, -avg_over:].mean(axis=(1, 2))
+# const_step_optimal: NDArray[np.float64] = const_step_optimal_all[:, :, -avg_over:].mean(axis=(1, 2))
+
+# load constant_step_size data
+const_step_rewards_all = pd.read_csv("data/ex_0211/constant_step_size_rewards.csv").drop("step", axis=1).values
+const_step_optimal_all = pd.read_csv("data/ex_0211/constant_step_size_optimal.csv").drop("step", axis=1).values
+const_step_rewards: NDArray[np.float64] = const_step_rewards_all[-avg_over:].mean(axis=0)
+const_step_optimal: NDArray[np.float64] = const_step_optimal_all[-avg_over:].mean(axis=0)
 
 fig, axes = plt.subplots(2, 1, figsize=(7.3, 8.4))
 
